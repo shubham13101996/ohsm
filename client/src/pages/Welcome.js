@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-
+import React, { useState } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import toast from "react-hot-toast";
 const Container = styled.div`
   background-color: #fff;
   padding: 20px;
@@ -45,14 +46,14 @@ const Button = styled.button`
 
 const Welcome = () => {
   const [property, setProperty] = useState({
-    propertyType: '',
-    propertyName: '',
-    phone: '',
-    email: '',
-    address:'',
-    state:'',
-    city:'',
-    pincode:'',
+    propertyType: "",
+    propertyName: "",
+    phone: "",
+    email: "",
+    address: "",
+    state: "",
+    city: "",
+    pincode: "",
   });
 
   const handleChange = (e) => {
@@ -60,10 +61,27 @@ const Welcome = () => {
     setProperty((prevProperty) => ({ ...prevProperty, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // You can add your logic here to handle the form submission
-    console.log('Submitted:', property);
+    try {
+      const res = await axios.post("/api/v1/setup", { property });
+      setProperty({
+        propertyType: "",
+        propertyName: "",
+        phone: "",
+        email: "",
+        address: "",
+        state: "",
+        city: "",
+        pincode: "",
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong!!");
+    }
+    // console.log('Submitted:', property);
   };
 
   return (
@@ -72,90 +90,97 @@ const Welcome = () => {
       <Form onSubmit={handleSubmit}>
         <Label>
           Property Type:
-          <br/>
+          <br />
           <Input
             type="text"
             name="propertyType"
             value={property.propertyType}
             onChange={handleChange}
+            required
           />
         </Label>
 
         <Label>
           Property Name :
-          <br/>
+          <br />
           <Input
             type="text"
             name="propertyName"
             value={property.propertyName}
             onChange={handleChange}
+            required
           />
         </Label>
 
         <Label>
           Phone Number :
-          <br/>
+          <br />
           <Input
             type="number"
             name="phone"
             value={property.phone}
+            required
             onChange={handleChange}
           />
         </Label>
 
         <Label>
           Email Address:
-          <br/>
+          <br />
           <Input
             type="email"
             name="email"
             value={property.email}
+            required
             onChange={handleChange}
           />
         </Label>
 
         <Label>
-           Address :
-           <br/>
+          Address :
+          <br />
           <Input
             type="text"
             name="address"
             value={property.address}
             onChange={handleChange}
+            required
           />
         </Label>
 
         <Label>
           State :
-          <br/>
+          <br />
           <Input
             type="text"
             name="state"
             value={property.state}
+            required
             onChange={handleChange}
           />
         </Label>
 
-
         <Label>
           City :
-          <br/>
+          <br />
           <Input
             type="type"
             name="city"
             value={property.city}
             onChange={handleChange}
+            required
           />
         </Label>
 
         <Label>
           Pincode :
-          <br/>
+          <br />
           <Input
             type="text"
             name="pincode"
             value={property.pincode}
             onChange={handleChange}
+            required
           />
         </Label>
         <Button type="submit">Complete Your Setup</Button>
